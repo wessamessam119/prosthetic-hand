@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wessam’s Prosthetic Hand</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f7;--sf:#fff;--ink:#18213f;--mu:#5a6483;--ln:#d9deea;--ac:#3555e8;--on:#fff;--hot:#d9480f;--oh:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1325;--sf:#171e38;--ink:#e9ecf8;--mu:#99a3c4;--ln:#283153;--ac:#7f97ff;--on:#0e1325;--hot:#ff8a4c;--oh:#1a0f08}}
+:root[data-theme="dark"]{--bg:#0e1325;--sf:#171e38;--ink:#e9ecf8;--mu:#99a3c4;--ln:#283153;--ac:#7f97ff;--on:#0e1325;--hot:#ff8a4c;--oh:#1a0f08}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 "Readex Pro",system-ui,"Segoe UI",Tahoma,sans-serif;padding-bottom:96px}
+#app{max-width:680px;margin:0 auto;padding:16px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.nm{display:block;font-size:20px;font-weight:600;line-height:1.3}
+.sub{font-size:13px;color:var(--mu)}
+.tools{display:flex;gap:8px}
+button{font:inherit;cursor:pointer;color:var(--ink);background:var(--sf);border:1px solid var(--ln);border-radius:12px;min-height:46px;padding:0 14px}
+button:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.cn{background:var(--ac);color:var(--on);border-color:var(--ac);font-weight:600}
+.cn.live{background:var(--sf);color:var(--ink);border-color:var(--ln)}
+.hero{margin-top:20px}
+h1{font-size:30px;line-height:1.3;margin:0 0 8px;font-weight:600}
+.hero p{margin:0;color:var(--mu);max-width:56ch}
+.stage{position:relative;margin-top:16px;background:var(--sf);border:1px solid var(--ln);border-radius:28px;padding:14px}
+.stage svg{display:block;width:100%;max-height:300px}
+.tag{position:absolute;top:14px;inset-inline-start:16px;font-size:13px;padding:2px 12px;border-radius:99px;background:var(--bg);color:var(--mu)}
+.tag.live{background:var(--ac);color:var(--on)}
+.palm{fill:var(--sf);stroke:var(--ink);stroke-width:3}
+.arm{fill:var(--ln)}
+.fng{fill:var(--ac);stroke:var(--ink);stroke-width:2;transition:y .35s,height .35s,opacity .35s,transform .35s}
+#hand{transform-origin:158px 250px;transition:transform .5s}
+h2{font-size:18px;margin:28px 0 10px;font-weight:600}
+.list{display:grid;gap:8px}
+.row{display:flex;align-items:center;gap:14px;text-align:start;border-radius:16px;min-height:64px;padding:8px 16px;width:100%}
+.em{font-size:28px;line-height:1}
+.tx{flex:1;font-weight:600}
+.mini{display:flex;align-items:flex-end;gap:3px;height:30px}
+.mini i{width:6px;border-radius:3px;background:var(--ac);opacity:.6}
+.on{background:var(--ac)!important;color:var(--on)!important;border-color:var(--ac)!important}
+.on .mini i{background:var(--on)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.pill{border-radius:99px;padding:0 18px}
+.fg{display:grid;grid-template-columns:76px 1fr auto auto;gap:10px;align-items:center;margin-bottom:8px}
+.tr{height:10px;border-radius:5px;background:var(--ln);overflow:hidden}
+.tr i{display:block;height:100%;width:0;background:var(--ac);transition:width .35s}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.note{font-size:13px;color:var(--mu);margin-top:28px;max-width:60ch}
+.bar{position:fixed;inset-inline:0;bottom:0;background:var(--sf);border-top:1px solid var(--ln);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}
+.rel{display:block;width:100%;max-width:648px;margin:0 auto;min-height:52px;background:var(--hot);border-color:var(--hot);color:var(--oh);font-weight:600}
+.toast{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));inset-inline:16px;margin:auto;max-width:420px;background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:12px;text-align:center;z-index:9}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const $=s=>document.querySelector(s);
+const FN=[["الإبهام","Thumb",5],["السبابة","Index",3],["الوسطى","Middle",2],["البنصر","Ring",1],["الخنصر","Pinky",4]];
+const GP={open:["o",[0,0,0,0,0]],fist:["f",[1,1,1,1,1]],cup:["c",[.73,.48,.7,.85,1]],ball:["b",[.94,.73,.7,1,1]],pen:["n",[.94,.52,.46,.92,1]],card:["x",[.84,.5,.46,.92,1]],point:["p",[1,0,1,1,1]],peace:["v",[1,0,0,1,1]],thumb:["t",[0,1,1,1,1]],pinch:["k",[1,1,0,0,0]]};
+const DAILY=[["cup","☕","شرب","Drinking"],["pen","✏️","كتابة","Writing"],["card","💳","دفع بالكارت","Paying by card"],["ball","⚽","إمساك كرة","Holding a ball"]];
+const GEST=[["open","🖐️","فتح","Open"],["fist","✊","قبضة","Fist"],["point","☝️","إشارة","Point"],["peace","✌️","نصر","Peace"],["thumb","👍","إعجاب","Thumbs up"],["pinch","🤏","قرصة","Pinch"]];
+const T={
+dept:["هندسة طبية حيوية","Biomedical engineering"],lg:["EN","عربي"],
+con:["اتصال بلوتوث","Connect Bluetooth"],dis:["فصل الاتصال","Disconnect"],on:["متصل","Connected"],demo:["وضع تجريبي","Demo mode"],
+h:["استقلالية أكبر في الحياة اليومية","More independence in everyday life"],
+p:["يد اصطناعية مطبوعة ثلاثية الأبعاد بستة محركات. تساعد الأشخاص ذوي بتر الطرف العلوي على الإمساك بأدوات اليوم بلمسة واحدة.","A 3D-printed prosthetic hand driven by six servos. It helps people with an upper-limb amputation hold everyday objects with one tap."],
+d:["أنشطة يومية","Daily activities"],g:["إيماءات","Gestures"],f:["كل إصبع لوحده","Each finger"],w:["الرسغ","Wrist"],
+o:["افتح","Open"],c:["اقفل","Close"],st:["مستقيم","Straight"],tu:["ملفوف","Turned"],rel:["افتح اليد الآن","Open hand now"],
+n:["نموذج أولي للتعليم والبحث وليس جهازاً طبياً معتمداً. التحكم عبر Bluetooth بوحدة HC-05.","Research and education prototype, not a certified medical device. Controlled over Bluetooth with an HC-05 module."],
+uns:["المتصفح لا يدعم Web Serial. افتح الصفحة من Chrome على Android.","This browser lacks Web Serial. Open the page in Chrome on Android."],
+fail:["تعذر الاتصال. اعمل Pair مع HC-05 من إعدادات الموبايل وجرّب تاني.","Could not connect. Pair the HC-05 in phone settings and try again."]};
+let lang="ar",c=[0,0,0,0,0],wr=0,act="open",port=null,wtr=null,rd=null;
+const t=k=>T[k][lang==="ar"?0:1], L=a=>a[lang==="ar"?0:1];
+const G=[0,[112,28,96],[144,28,106],[176,28,96],[205,24,74]];
+const SVG=`<svg viewBox="0 0 300 270" role="img" aria-label="Prosthetic hand"><rect class="arm" x="128" y="228" width="60" height="42" rx="10"/><g id="hand">`+
+`<rect id="f0" class="fng" x="-13" y="-72" width="26" height="72" rx="13"/>`+
+[1,2,3,4].map(i=>`<rect id="f${i}" class="fng" x="${G[i][0]-G[i][1]/2}" width="${G[i][1]}" rx="${G[i][1]/2}" y="34" height="96"/>`).join("")+
+`<rect class="palm" x="92" y="118" width="132" height="110" rx="30"/></g></svg>`;
+function mini(id){return GP[id][1].map(v=>`<i style="height:${6+v*22}px"></i>`).join("")}
+function render(){
+const on=!!port;
+document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+$("#app").innerHTML=
+`<header class="top"><div><b class="nm">Wessam</b><span class="sub">${t("dept")}</span></div><div class="tools"><button onclick="tg()">${t("lg")}</button><button class="cn ${on?"live":""}" onclick="connect()">${on?t("dis"):t("con")}</button></div></header>`+
+`<section class="hero"><h1>${t("h")}</h1><p>${t("p")}</p><div class="stage"><span class="tag ${on?"live":""}">${on?t("on"):t("demo")}</span>${SVG}</div></section>`+
+`<h2>${t("d")}</h2><div class="list">${DAILY.map(x=>`<button class="row" data-g="${x[0]}" onclick="grip('${x[0]}')"><span class="em">${x[1]}</span><span class="tx">${L(x.slice(2))}</span><span class="mini">${mini(x[0])}</span></button>`).join("")}</div>`+
+`<h2>${t("g")}</h2><div class="chips">${GEST.map(x=>`<button class="pill" data-g="${x[0]}" onclick="grip('${x[0]}')">${x[1]} ${L(x.slice(2))}</button>`).join("")}</div>`+
+`<h2>${t("f")}</h2>${FN.map((x,i)=>`<div class="fg"><span>${L(x)}</span><div class="tr"><i id="b${i}"></i></div><button onclick="fin(${i},0)">${t("o")}</button><button onclick="fin(${i},1)">${t("c")}</button></div>`).join("")}`+
+`<h2>${t("w")}</h2><div class="two"><button data-w="0" onclick="wrist(0)">${t("st")}</button><button data-w="1" onclick="wrist(1)">${t("tu")}</button></div>`+
+`<p class="note">${t("n")}</p><div class="bar"><button class="rel" onclick="grip('open')">${t("rel")}</button></div>`;
+paint();
+}
+function paint(){
+c.forEach((v,i)=>{
+const e=$("#f"+i);e.style.opacity=.2+.8*v;
+if(i){const h=G[i][2]*(1-.6*v),y=130-h;e.setAttribute("y",y);e.setAttribute("height",h);e.style.y=y+"px";e.style.height=h+"px"}
+else{const h=72*(1-.5*v);e.setAttribute("y",-h);e.setAttribute("height",h);e.style.transform=`translate(92px,196px) rotate(${-52+30*v}deg)`}
+$("#b"+i).style.width=v*100+"%";
+});
+$("#hand").style.transform=`rotate(${wr?68:0}deg)`;
+document.querySelectorAll("[data-g]").forEach(b=>b.classList.toggle("on",b.dataset.g===act));
+document.querySelectorAll("[data-w]").forEach(b=>b.classList.toggle("on",+b.dataset.w===wr));
+}
+async function send(m){if(!wtr)return;try{await wtr.write(new TextEncoder().encode(m+"\n"))}catch(e){toast(t("fail"))}}
+function grip(id){const g=GP[id];c=g[1].slice();act=id;send(g[0]);paint()}
+function fin(i,cl){c[i]=cl;act=null;send("F"+FN[i][2]+(cl?"c":"o"));paint()}
+function wrist(v){wr=v;send(v?"W":"w");paint()}
+function tg(){lang=lang==="ar"?"en":"ar";render()}
+function toast(m){const d=document.createElement("div");d.className="toast";d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),3200)}
+async function drain(r){try{while(!(await r.read()).done);}catch(e){}}
+async function connect(){
+if(port){try{await rd.cancel();wtr.releaseLock();await port.close()}catch(e){}port=wtr=rd=null;return render()}
+if(!("serial" in navigator))return toast(t("uns"));
+try{port=await navigator.serial.requestPort();await port.open({baudRate:9600});wtr=port.writable.getWriter();rd=port.readable.getReader();drain(rd)}
+catch(e){port=wtr=rd=null;toast(t("fail"))}
+render();
+}
+render();
+</script>
+</body>
+</html>
